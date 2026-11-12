@@ -317,13 +317,48 @@
   }
 
   /* ---------------- zoom ---------------- */
-  let zoom = 1;
-  function setZoom(z) {
-    zoom = Math.max(1, Math.min(2.5, Math.round(z * 4) / 4));
+  let zoom = 1, zoomWas = 1;
+  function setZoom(z, free) {
+    zoom = Math.max(1, Math.min(2.5, free ? z : Math.round(z * 4) / 4));
+    const stg = $("#stage"), rx = stg.scrollWidth ? (stg.scrollLeft + stg.clientWidth / 2) / stg.scrollWidth : .5, ry = stg.scrollHeight ? (stg.scrollTop + stg.clientHeight / 2) / stg.scrollHeight : .5;
     const b = $("#book"); b.style.width = (zoom * 100) + "%"; b.style.height = (zoom * 100) + "%";
+    const keep = zoom > 1 ? (zoomWas > 1 ? [rx, ry] : [.5, .5]) : null; zoomWas = zoom;
+    if (keep) { stg.scrollLeft = keep[0] * stg.scrollWidth - stg.clientWidth / 2; stg.scrollTop = keep[1] * stg.scrollHeight - stg.clientHeight / 2; }
     $("#stage").classList.toggle("zoomed", zoom > 1); $("#zLbl").textContent = Math.round(zoom * 100) + "%";
-    setTimeout(() => { window.dispatchEvent(new Event("resize")); try { pf.update(); } catch (e) {} }, 60);
+    setTimeout(() => { window.dispatchEvent(new Event("resize")); try { pf.update(); } catch (e) {} if (zoom > 1) { stg.scrollLeft = (keep ? keep[0] : .5) * stg.scrollWidth - stg.clientWidth / 2; stg.scrollTop = (keep ? keep[1] : .5) * stg.scrollHeight - stg.clientHeight / 2; } }, 80);
   }
+  /* pinch to zoom + one-finger pan when zoomed (tablet / phone) */
+  (function () {
+    const st = $("#stage"); let d0 = 0, z0 = 1, pan = null, pinching = false, wasPinch = false, idx0 = 0, lastApply = 0;
+    const dist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+    st.style.touchAction = "pan-x pan-y";
+    st.addEventListener("touchstart", e => {
+      if (e.touches.length === 2) { pinching = true; wasPinch = true; idx0 = (wasPinch && idx0 !== undefined && st.classList.contains("gest")) ? idx0 : pf.getCurrentPageIndex(); st.classList.add("gest"); d0 = dist(e.touches); z0 = zoom; pan = null; e.stopPropagation(); }
+      else if (e.touches.length === 1 && zoom > 1 && !e.target.closest("button,.hot,.mcard,.cp")) { pan = { x: e.touches[0].clientX, y: e.touches[0].clientY, l: st.scrollLeft, t: st.scrollTop, m: false }; e.stopPropagation(); }
+    }, { capture: true, passive: true });
+    st.addEventListener("touchmove", e => {
+      if (pinching && e.touches.length === 2) {
+        e.preventDefault(); e.stopPropagation();
+        const now = Date.now(); if (now - lastApply < 40) return; lastApply = now;
+        setZoom(z0 * dist(e.touches) / d0, true);
+      } else if (pan && e.touches.length === 1) {
+        e.preventDefault(); e.stopPropagation();
+        if (!pan.m && Math.hypot(e.touches[0].clientX - pan.x, e.touches[0].clientY - pan.y) > 8) { pan.m = true; st.classList.add("gest"); }
+        st.scrollLeft = pan.l - (e.touches[0].clientX - pan.x); st.scrollTop = pan.t - (e.touches[0].clientY - pan.y);
+      }
+    }, { capture: true, passive: false });
+    const end = e => {
+      if (wasPinch) e.stopPropagation();   // keep the page-flip library from reading the pinch as a swipe
+      if (pinching && e.touches.length < 2) { pinching = false; setZoom(zoom, true); }
+      if (!e.touches.length) {
+        pan = null;
+        if (wasPinch) { wasPinch = false; const back = () => { if (pf.getCurrentPageIndex() !== idx0) pf.turnToPage(idx0); }; setTimeout(back, 80); setTimeout(back, 1000); }
+        setTimeout(() => { if (!pinching && !pan) st.classList.remove("gest"); }, 350);
+      }
+    };
+    st.addEventListener("touchend", end, { capture: true, passive: true });
+    st.addEventListener("touchcancel", end, { capture: true, passive: true });
+  })();
   $("#zIn").onclick = () => setZoom(zoom + 0.25); $("#zOut").onclick = () => setZoom(zoom - 0.25);
   $("#zLbl").onclick = () => setZoom(1);
 
