@@ -5,7 +5,7 @@ Open `index.html` through any web server (GitHub Pages works). Double-clicking t
 ## Put it online (GitHub Pages)
 1. Upload everything in this folder to a repo (e.g. `Smart-MUET-eBook`).
 2. Settings > Pages > Deploy from branch > `main` / root.
-3. Link: `https://juliemarlina-collab.github.io/Smart-MUET-eBook/`
+3. Link: `https://juliemarlina-collab.github.io/Smart-MUET-Guidance/`
 
 ## Files
 | File | What it does |

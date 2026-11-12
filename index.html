@@ -92,8 +92,7 @@
         <p>This is your own interactive MUET guide. Flip the pages, tap the blue links, and clear a short checkpoint after each unit. I’ll cheer you on.</p>
         <label for="wName">What should I call you?</label>
         <input id="wName" type="text" maxlength="24" placeholder="Your first name" autocomplete="given-name">
-        <label>How do you want to read?</label>
-        <div class="chips" id="wMode"><button data-m="guided">Guided · checkpoints unlock units</button><button data-m="free">Free · read anything</button></div>
+        <div id="wMode" hidden></div>
         <label>Your MUET target</label>
         <div class="chips" id="wGoal"><button data-g="Band 3">Band 3</button><button data-g="Band 4">Band 4</button><button data-g="Band 5">Band 5</button><button data-g="Band 5+" >Band 5+</button></div>
         <button class="btn go" id="wGo">Open the book ›</button>

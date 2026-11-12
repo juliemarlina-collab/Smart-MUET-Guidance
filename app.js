@@ -33,7 +33,7 @@
   const isComplete = u => !!(state.units[u.id] && state.units[u.id].complete);
   const unitScore = u => state.units[u.id] && state.units[u.id].best;
   const firstIncomplete = () => UNITS.find(u => !isComplete(u));
-  const guided = () => CFG.REQUIRE_COMPLETE && !state.free;
+  const guided = () => false;   // nothing is locked: every page is open, checkpoints are optional
   const nm = () => (state.name || "").trim();
   const you = (pre = "", post = "") => nm() ? pre + nm() + post : "";
   const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -199,7 +199,7 @@
     const u = UNITS.find(x => v.includes(x.end - 1)), cp = $("#cpBtn");
     if (u) {
       cp.hidden = false; cp.classList.toggle("done", isComplete(u));
-      cp.textContent = ""; cp.append(mi(isComplete(u) ? "trophy" : "check", isComplete(u) ? "pop" : "wob"), isComplete(u) ? `Unit ${u.id} checkpoint done · Review` : `Start Unit ${u.id} checkpoint`);
+      cp.textContent = ""; cp.append(mi(isComplete(u) ? "trophy" : "check", isComplete(u) ? "pop" : "wob"), isComplete(u) ? `Unit ${u.id} checkpoint done · Review` : `Unit ${u.id} checkpoint · optional`);
       cp.onclick = () => openUnit(u);
     } else cp.hidden = true;
     renderToc(); markThumbs(cur);
@@ -274,9 +274,6 @@
         h("button", { class: "link", onclick: () => { closeDrawer(); openUnit(u); } }, isComplete(u) ? "Review checkpoint →" : "Open checkpoint →"));
       box.append(card);
     });
-    box.append(h("div", { class: "modebox" }, h("b", {}, "Reading mode"),
-      h("div", { class: "chips light" }, [["guided", "Guided"], ["free", "Free"]].map(([k, l]) => h("button", { class: (state.free ? "free" : "guided") === k ? "on" : "", onclick: () => { state.free = k === "free"; save(); refresh(); toast(k === "free" ? "Free mode: read any page. Checkpoints are optional." : "Guided mode: finish each checkpoint to unlock the next unit."); } }, l))),
-      h("small", {}, state.free ? "Read any page in any order. Checkpoints stay optional." : "Checkpoints unlock the next unit.")));
     $("#btnCert").hidden = !UNITS.every(isComplete);
   }
   function renderThumbs() {
@@ -470,12 +467,12 @@
   $("#btnName").onclick = () => { closeDrawer(); showWelcome(true); };
 
   /* ---------------- welcome (personal touch) ---------------- */
-  let wGoal = state.goal || "", wMode = state.free ? "free" : "guided";
+  let wGoal = state.goal || "", wMode = "free"; state.free = true;
   function paintGreet() { $("#greet").textContent = nm() ? `Hi ${nm()} 👋 · Band Up! 2027` : "Band Up! 2027 · Interactive eBook"; }
   function showWelcome(edit) {
     $("#welcome").hidden = false; $("#wName").value = nm(); wGoal = state.goal || "";
     $$("#wGoal button").forEach(b => b.classList.toggle("on", b.dataset.g === wGoal));
-    wMode = state.free ? "free" : "guided"; $$("#wMode button").forEach(b => b.classList.toggle("on", b.dataset.m === wMode));
+    wMode = "free"; $$("#wMode button").forEach(b => b.classList.toggle("on", b.dataset.m === wMode));
     $("#wGo").textContent = edit ? "Save ›" : "Open the book ›"; setTimeout(() => $("#wName").focus(), 300);
   }
   $$("#wGoal button").forEach(b => b.onclick = () => { wGoal = wGoal === b.dataset.g ? "" : b.dataset.g; $$("#wGoal button").forEach(x => x.classList.toggle("on", x.dataset.g === wGoal)); });
@@ -787,7 +784,7 @@
     const [m, mt] = medal(p);
     body.append(h("div", { class: "result" },
       h("div", { class: "medal" }, pass ? mi("trophy", "pop big") : "🔁"),
-      h("h3", {}, pass ? `${you("", ", ")}${p >= 90 ? "you nailed it" : p >= 70 ? "great job" : p >= 50 ? "good effort" : "nice try"}! ${mt} ${x} / ${y} (${p}%)` : `${you("", ", ")}${p >= 40 ? "so close" : "not yet"}! ${x} / ${y} (${p}%). You need ${CFG.PASS_PERCENT}% to unlock the next unit.`),
+      h("h3", {}, pass ? `${you("", ", ")}${p >= 90 ? "you nailed it" : p >= 70 ? "great job" : p >= 50 ? "good effort" : "nice try"}! ${mt} ${x} / ${y} (${p}%)` : `${you("", ", ")}${p >= 40 ? "so close" : "not yet"}! ${x} / ${y} (${p}%). Get ${CFG.PASS_PERCENT}% to complete this checkpoint — you can retry anytime.`),
       h("div", { class: "bk" }, STEPS.map(s => { const [a, b] = scoreOf(s.key); return h("div", {}, h("span", {}, s.icon + " " + s.label), h("span", {}, a + " / " + b)); })),
       UNITS.every(isComplete) ? h("button", { class: "btn go", style: "margin:6px auto 4px", onclick: certificate }, "🎓 Download my certificate") : null,
       h("p", { class: "note" }, pass ? "Your best score is saved on this device. You can retry any time to improve it." : "No stress. Read the unit pages again, then try once more. The questions come in a new order each time.")));
