@@ -549,3 +549,23 @@ body:has(#guide:not([hidden])) .toast{display:none!important}
 .wshell{gap:10px}
 @media(max-height:760px){#welcome .wform p{display:none}#welcome .wlogo{width:120px}}
 .wsheen{display:none!important}
+
+/* ===== v21: bigger logo + friendlier heading & stats ===== */
+#welcome .wlogo{width:clamp(210px,26vw,340px)!important;max-width:78vw}
+@media(max-width:640px){#welcome .wlogo{width:min(230px,66vw)!important}}
+@media(max-height:760px){#welcome .wlogo{width:clamp(180px,22vw,260px)!important}}
+@media(max-height:520px){#welcome .wlogo{width:150px!important}}
+.logo{width:48px;height:48px}
+@media(min-width:900px){.logo{width:56px;height:56px}}
+#welcome .wform h1{font-family:Poppins,Nunito,"Segoe UI",sans-serif;font-weight:800;font-size:clamp(30px,4.6vw,50px);line-height:1.08;letter-spacing:-.02em;
+  background:linear-gradient(100deg,#fff 0%,#fff 45%,#ffd34d 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;text-shadow:none}
+#welcome .wform small{font-family:Poppins,sans-serif;font-weight:700;letter-spacing:.14em}
+#welcome .wform p{font-family:Nunito,Inter,"Segoe UI",sans-serif;font-weight:600}
+#welcome .winside{padding:12px 6px;border-radius:20px;background:linear-gradient(180deg,rgba(10,12,60,.5),rgba(10,12,60,.3));box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+#welcome .winside span{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:Nunito,sans-serif;font-size:clamp(10px,1.3vw,12px);font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+#welcome .winside b{display:block;font-family:Poppins,sans-serif;font-weight:900;font-size:clamp(26px,4vw,38px);line-height:1;letter-spacing:-.02em;
+  background:linear-gradient(180deg,#fff6c9 0%,#ffd34d 55%,#ff9a3d 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;filter:drop-shadow(0 2px 0 rgba(120,40,0,.35))}
+#welcome .winside i{height:38px}
+#welcome .wgoal button b,#welcome .wform label,#wGo{font-family:Poppins,Nunito,sans-serif}
+#welcome .wgoal button b{font-weight:800;font-size:17px}
+#welcome .wgoal button em{font-family:Nunito,sans-serif;font-weight:700}
