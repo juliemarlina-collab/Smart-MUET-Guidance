@@ -499,3 +499,53 @@ img.wb{opacity:.9;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
 .gbans{grid-template-columns:repeat(4,1fr);gap:6px}
 body:has(#guide:not([hidden])) .toast{display:none!important}
 @media(max-width:560px){.gbans{grid-template-columns:1fr 1fr}.gic{width:56px;height:56px}}
+
+/* ===== v20 premium welcome ===== */
+.wb{display:none!important}
+#welcome{background:radial-gradient(1200px 700px at 15% 0%,#5b66ff 0%,transparent 60%),radial-gradient(900px 600px at 100% 100%,#7a2fd6 0%,transparent 55%),linear-gradient(160deg,#1c2196 0%,#0c0f3d 100%)!important;overflow:auto}
+#welcome .wo1,#welcome .wo2,#welcome .wo3{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;opacity:.5}
+.wo1{width:360px;height:360px;background:#ffb02e;left:-90px;bottom:-110px;opacity:.28!important}
+.wo2{width:300px;height:300px;background:#18d6c1;right:8%;top:-90px;opacity:.25!important}
+.wo3{width:240px;height:240px;background:#ff4d8d;left:42%;bottom:-120px;opacity:.2!important}
+.wshell{position:relative;width:min(1000px,100%);display:flex;flex-direction:column;align-items:center;gap:14px;margin:auto}
+#welcome .wlogo{width:clamp(130px,16vw,170px);margin:0;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));animation:none}
+#welcome .wcard{width:100%;max-width:none;display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;padding:clamp(18px,3vw,34px);border-radius:30px;
+  background:linear-gradient(145deg,rgba(255,255,255,.20),rgba(255,255,255,.07) 55%,rgba(255,255,255,.12));
+  border:1px solid rgba(255,255,255,.35);box-shadow:0 30px 80px rgba(3,4,40,.55),inset 0 1.5px 0 rgba(255,255,255,.55),inset 0 -1px 0 rgba(255,255,255,.1);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%)}
+.wcover{display:flex;flex-direction:column;align-items:center;gap:16px;perspective:none}
+.wcv{position:relative;width:100%;max-height:52vh;display:flex;justify-content:center}
+.wcv img{position:relative;width:auto;max-width:100%;max-height:52vh;border-radius:8px 16px 16px 8px;transform:none;animation:wfloat2 5s ease-in-out infinite;
+  box-shadow:0 26px 50px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.25),inset 5px 0 8px rgba(0,0,0,.2);-webkit-box-reflect:below 4px linear-gradient(transparent 82%,rgba(255,255,255,.22))}
+@keyframes wfloat2{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.wsheen{position:absolute;left:50%;top:0;bottom:0;width:min(100%,260px);transform:translateX(-50%);border-radius:8px 16px 16px 8px;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.38) 0%,rgba(255,255,255,0) 38%,rgba(255,255,255,0) 62%,rgba(255,255,255,.14) 100%)}
+.wcv .wglow{inset:6% 10%;filter:blur(30px)}
+#welcome .wskills{display:flex;gap:10px;margin:0;justify-content:center}
+#welcome .wskills img{width:clamp(40px,5vw,52px);height:auto;filter:drop-shadow(0 5px 8px rgba(0,0,0,.35));animation:none}
+#welcome .wform{min-width:0}
+#welcome .wform h1{font-size:clamp(28px,4.4vw,44px);margin:4px 0 8px;letter-spacing:-.01em}
+#welcome .wform p{font-size:clamp(13px,1.7vw,16px);margin:0 0 12px;max-width:44ch}
+#welcome .winside{display:flex;align-items:center;gap:0;margin:0 0 4px;padding:8px 6px;border-radius:16px;background:rgba(10,12,60,.35);border:1px solid rgba(255,255,255,.18)}
+#welcome .winside span{background:none;border:0;padding:0 4px;flex:1;min-width:0;font-size:11px;font-weight:600;opacity:.95;text-align:center}
+#welcome .winside b{font-size:clamp(17px,2.6vw,22px)}
+#welcome .winside i{width:1px;height:26px;background:rgba(255,255,255,.22)}
+#welcome .wform label{margin:12px 0 6px;font-size:13px;letter-spacing:.02em;opacity:.95}
+#welcome .wform input{padding:13px 16px;font-size:17px;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.25),inset 0 -2px 0 rgba(0,0,0,.06)}
+#welcome .wgoal button{background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.35);min-height:54px;box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+#welcome .wgoal button.on{background:linear-gradient(180deg,#ff9a3d,#ff6a00)!important;border-color:#ffd9b8;box-shadow:0 10px 24px rgba(255,106,0,.45),inset 0 1.5px 0 rgba(255,255,255,.6)}
+#wGo{position:relative;overflow:hidden;margin-top:16px!important;border-radius:16px!important;background:linear-gradient(180deg,#ffa24a 0%,#ff6a00 55%,#ee5a00 100%)!important;border:1px solid rgba(255,255,255,.5)!important;box-shadow:0 14px 30px rgba(255,106,0,.45),inset 0 2px 0 rgba(255,255,255,.65),inset 0 -3px 0 rgba(150,50,0,.25)!important;letter-spacing:.02em}
+#wGo::before{content:"";position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.05));pointer-events:none}
+#wGo::after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);animation:wshine 3.2s ease-in-out infinite}
+@keyframes wshine{0%,60%{left:-80px}100%{left:110%}}
+#wGo.wait{background:linear-gradient(180deg,#8f94d8,#6b70b8)!important;box-shadow:inset 0 2px 0 rgba(255,255,255,.4)!important;animation:none}
+#wGo.wait::after{display:none}
+#wGo:not(.wait){animation:none}
+#welcome .wnote{font-size:12px;margin-top:8px;text-align:center}
+@media(max-width:760px){#welcome .wcard{grid-template-columns:1fr;gap:12px;padding:16px;border-radius:24px}.wcv{max-height:30vh}.wcv img{max-height:30vh}#welcome .wskills{order:2}#welcome .wcover{flex-direction:row;gap:14px;justify-content:center}.wcv{width:auto}#welcome .wskills{display:grid;grid-template-columns:1fr 1fr;gap:8px}#welcome .wgoal{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.wcv img,#wGo::after{animation:none!important}}
+.wcv img{-webkit-box-reflect:unset!important;max-height:46vh!important}
+.wcv{max-height:46vh!important}
+#welcome{padding:10px!important}
+.wshell{gap:10px}
+@media(max-height:760px){#welcome .wform p{display:none}#welcome .wlogo{width:120px}}
+.wsheen{display:none!important}

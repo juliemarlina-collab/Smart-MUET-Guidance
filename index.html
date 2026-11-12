@@ -85,24 +85,28 @@
     <div class="sheet srch"><div class="sbar"><span>🔍</span><input id="sInput" type="search" placeholder="Search: PREP, band, exam slip, listening…" autocomplete="off"><button class="x" id="sClose" aria-label="Close">✕</button></div><div id="sRes" class="sres"></div></div>
   </div>
   <div id="welcome" class="welcome" hidden>
-    <img class="wb b1" src="assets/ic-streak.webp" alt=""><img class="wb b2" src="assets/ic-speak.webp" alt=""><img class="wb b3" src="assets/ic-listen.webp" alt=""><img class="wb b4" src="assets/ic-write.webp" alt="">
-    <div class="wcard">
-      <div class="wcover"><span class="wglow"></span><img id="wImg" alt="Smart MUET Guide cover" src="pages/p-01.webp"></div>
-      <div class="wform">
-        <img class="wlogo" src="assets/logo-wide.webp" alt="Smart MUET Guide" width="300" height="126">
-        <small>SELAMAT DATANG · WELCOME 👋</small>
-        <h1 id="wHi">Ready to Band Up?</h1>
-        <p>Your own interactive MUET guide. Flip the pages, tap and answer on the page, and play a short checkpoint after each chapter.</p>
-        <div class="wskills"><img src="assets/ic-listen.webp" alt="Listening"><img src="assets/ic-speak.webp" alt="Speaking"><img src="assets/ic-read.webp" alt="Reading"><img src="assets/ic-write.webp" alt="Writing"></div>
-        <div class="winside"><span><b>53</b>pages</span><span><b>8</b>chapters</span><span><b>4</b>skills</span><span><b>20+</b>games &amp; checks</span></div>
-        <label for="wName">What should I call you?</label>
-        <input id="wName" type="text" maxlength="24" placeholder="Your first name" autocomplete="given-name">
-        <div id="wMode" hidden></div>
-        <label>Your MUET target</label>
-        <div class="chips wgoal" id="wGoal"><button data-g="Band 3"><b>Band 3</b><em>Get started</em></button><button data-g="Band 4"><b>Band 4</b><em>Pass confidently</em></button><button data-g="Band 5"><b>Band 5</b><em>Aim high</em></button><button data-g="Band 5+"><b>Band 5+</b><em>Top score</em></button></div>
-        <button class="btn go" id="wGo">Open the book ›</button>
-        <div class="wnote" id="wNote">Takes 1 minute to set up</div>
-        <button class="link" id="wSkip">Skip for now</button>
+    <span class="wo1"></span><span class="wo2"></span><span class="wo3"></span>
+    <div class="wshell">
+      <img class="wlogo" src="assets/logo-wide.webp" alt="Smart MUET Guide" width="300" height="126">
+      <div class="wcard">
+        <div class="wcover">
+          <div class="wcv"><span class="wglow"></span><img id="wImg" alt="Smart MUET Guide cover" src="pages/p-01.webp"><span class="wsheen"></span></div>
+          <div class="wskills"><img src="assets/ic-listen.webp" alt="Listening"><img src="assets/ic-speak.webp" alt="Speaking"><img src="assets/ic-read.webp" alt="Reading"><img src="assets/ic-write.webp" alt="Writing"></div>
+        </div>
+        <div class="wform">
+          <small>SELAMAT DATANG · WELCOME 👋</small>
+          <h1 id="wHi">Ready to Band Up?</h1>
+          <p>Your own interactive MUET guide. Flip the pages, tap and answer on the page, and play a short checkpoint after each chapter.</p>
+          <div class="winside"><span><b>53</b>pages</span><i></i><span><b>8</b>chapters</span><i></i><span><b>4</b>skills</span><i></i><span><b>20+</b>games &amp; checks</span></div>
+          <label for="wName">What should I call you?</label>
+          <input id="wName" type="text" maxlength="24" placeholder="Your first name" autocomplete="given-name">
+          <div id="wMode" hidden></div>
+          <label>Your MUET target</label>
+          <div class="chips wgoal" id="wGoal"><button data-g="Band 3"><b>Band 3</b><em>Get started</em></button><button data-g="Band 4"><b>Band 4</b><em>Pass confidently</em></button><button data-g="Band 5"><b>Band 5</b><em>Aim high</em></button><button data-g="Band 5+"><b>Band 5+</b><em>Top score</em></button></div>
+          <button class="btn go" id="wGo">Open the book ›</button>
+          <div class="wnote" id="wNote">Takes 1 minute to set up</div>
+          <button class="link" id="wSkip">Skip for now</button>
+        </div>
       </div>
     </div>
   </div>

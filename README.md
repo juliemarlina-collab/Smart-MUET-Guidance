@@ -49,3 +49,6 @@ New opening screen: blue gradient with floating icons, glowing cover, "what's in
 
 ## v19
 New icon set + skill banners (assets/ic-*.webp, assets/ban-*.webp) used on the welcome screen, how-to guide, practice cards, chapter list, checkpoint headers and checkpoint button.
+
+## v20
+Redesigned opening screen: glass card on a deep blue-violet gradient, centred logo, cover with skill icons below, stats strip, band cards, glossy orange Open button. Corner icons removed. Fits tablet landscape without scrolling.
