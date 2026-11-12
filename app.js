@@ -47,6 +47,77 @@
     clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), ms);
   }
 
+  /* ---------------- on-page widgets (quiz taps, ticks, stars, typing) ---------------- */
+  const WID = window.BOOK_WIDGETS || {};
+  state.wd = state.wd || {};
+  const wd = state.wd;
+  const WALL = [];            // every widget spec, for scoring
+  Object.keys(WID).forEach(p => WID[p].forEach(w => { w.p = +p; WALL.push(w); }));
+  const wOkCount = prefixes => WALL.filter(w => w.t === "c" && prefixes.some(x => w.id.indexOf(x) === 0) && wd[w.id] === w.ans).length;
+  const bonusOf = id => { const b = (state.mini[id] && state.mini[id].data && state.mini[id].data.bonusBest) || 0; return id === "c34" ? Math.min(10, b * 2) : Math.min(6, b); };
+  const rollOf = id => wd[id] || 0;
+  const wScoreOf = s => {
+    let n = 0;
+    if (s.from) n += wOkCount(s.from);
+    if (s.bonus) n += bonusOf(s.bonus[0]);
+    if (s.extra) n += s.extra.reduce((a, id) => a + rollOf(id), 0);
+    return n;
+  };
+  const rowScore = k => ({ "8": () => wOkCount(["8."]), p21: () => wOkCount(["21."]) + bonusOf("c34"), p28: () => wOkCount(["28."]) + rollOf("28.roll"), p35: () => wOkCount(["35."]) + bonusOf("s54"), p42: () => wOkCount(["42."]), q: () => wOkCount(["q."]) }[k] || (() => 0))();
+  const anyOn = pfx => WALL.some(w => w.id && pfx.some(x => w.id.indexOf(x) === 0) && wd[w.id] != null);
+  const pct = (v, t) => (v / t * 100).toFixed(3) + "%";
+  const pos = (e, x, y, w, hh) => { e.style.cssText += `;left:${pct(x, 1000)};top:${pct(y, 1417)};width:${pct(w, 1000)};height:${pct(hh, 1417)}`; return e; };
+  const wRefs = [];           // redraw functions
+  function buildWidgets(page, pn, list) {
+    const L = h("div", { class: "wl" }); page.append(L);
+    const pageHasData = () => list.some(w => w.id && wd[w.id] != null);
+    const reset = h("button", { type: "button", class: "wreset", hidden: true, onclick: ev => { ev.stopPropagation(); list.forEach(w => { if (w.id && w.t !== "i") delete wd[w.id]; }); save(); redrawAll(); } }, "↺ Redo this page");
+    L.append(reset);
+    list.forEach(w => {
+      if (w.t === "c") {
+        w.els = w.o.map(o => {
+          const b = pos(h("button", { type: "button", class: "wo" + (w.small ? " sm" : "") + (w.pill ? " pl" : ""), "aria-label": "Answer " + o[0] }), o[1], o[2], o[3], o[4]);
+          b.onclick = ev => { ev.stopPropagation(); if (wd[w.id] != null) return; wd[w.id] = o[0]; save(); (o[0] === w.ans ? chimeOk : chimeBad)(); redrawAll(); };
+          L.append(b); return b;
+        });
+        w.draw = () => w.els.forEach((b, i) => {
+          const k = w.o[i][0], a = wd[w.id];
+          b.className = b.className.replace(/ (ok|bad|reveal)/g, "");
+          if (a != null) { if (k === a) b.className += k === w.ans ? " ok" : " bad"; else if (k === w.ans) b.className += " reveal"; }
+          b.textContent = a != null && k === a ? (k === w.ans ? "✓" : "✗") : (a != null && k === w.ans ? "✓" : "");
+        });
+      } else if (w.t === "k") {
+        const b = pos(h("button", { type: "button", class: "wo wk", "aria-label": "Tick" }), w.x, w.y, w.w, w.h);
+        b.onclick = ev => { ev.stopPropagation(); if (wd[w.id]) delete wd[w.id]; else { wd[w.id] = 1; chimeOk(); } save(); redrawAll(); };
+        L.append(b); w.draw = () => { b.classList.toggle("on", !!wd[w.id]); b.textContent = wd[w.id] ? "✓" : ""; };
+      } else if (w.t === "i") {
+        const inp = pos(h("input", { type: "text", class: "wi", maxlength: 40, autocomplete: "off", placeholder: "type here…" }), w.x, w.y, w.w, w.h);
+        inp.value = wd[w.id] || "";
+        inp.oninput = () => { wd[w.id] = inp.value; if (w.id === "target") state.goal = inp.value; save(); redrawAll(); };
+        ["pointerdown", "touchstart", "mousedown"].forEach(ev => inp.addEventListener(ev, e => e.stopPropagation()));
+        L.append(inp); w.draw = () => { if (document.activeElement !== inp) inp.value = wd[w.id] || ""; };
+      } else if (w.t === "v") {
+        const v = pos(h("div", { class: "wv" }), w.x, w.y, w.w, w.h); v.style.background = w.bg;
+        L.append(v); w.draw = () => { v.textContent = wd.target || state.goal || ""; v.hidden = !(wd.target || state.goal); };
+      } else if (w.t === "r") {
+        const box = pos(h("div", { class: "wr" }), w.x, w.y, w.w, w.h); const st = [];
+        for (let i = 0; i < w.n; i++) { const b = h("button", { type: "button", class: "wo wst", "aria-label": "Star " + (i + 1) }, "☆"); b.onclick = ev => { ev.stopPropagation(); wd[w.id] = (wd[w.id] === i + 1 ? i : i + 1); if (wd[w.id]) chimeOk(); save(); redrawAll(); }; st.push(b); box.append(b); }
+        L.append(box); w.draw = () => st.forEach((b, i) => { const on = i < (wd[w.id] || 0); b.textContent = on ? "★" : "☆"; b.classList.toggle("on", on); });
+      } else if (w.t === "s" || w.t === "tally") {
+        const v = pos(h("div", { class: "wsn" }), w.x, w.y, w.w, w.h); v.style.background = w.bg; L.append(v);
+        w.draw = () => {
+          let n, any;
+          if (w.page) { n = w.total ? ["8", "p21", "p28", "p35", "p42", "q"].reduce((a, k) => a + rowScore(k), 0) : rowScore(w.page); any = w.total ? n > 0 : n > 0; }
+          else { n = w.t === "tally" ? wOkCount(w.from) : wScoreOf(w); any = n > 0 || (w.from && anyOn(w.from)); }
+          v.hidden = !any; v.textContent = w.t === "tally" ? (w.label ? `⭐ Quiz Show stars: ${n} / ${w.of}` : `⭐ ${n} / ${w.of}`) : String(n); v.classList.toggle("tl", w.t === "tally"); v.classList.toggle("tb", pn === 50);
+        };
+      }
+    });
+    page._wdraw = () => { reset.hidden = !pageHasData() || !list.some(w => w.t === "c" || w.t === "k" || w.t === "r"); list.forEach(w => w.draw && w.draw()); };
+    wRefs.push(page._wdraw); page._wdraw();
+  }
+  function redrawAll() { wRefs.forEach(f => f()); }
+
   /* ---------------- build pages ---------------- */
   const bookEl = $("#book");
   const imgs = [];
@@ -68,6 +139,7 @@
       b.style.cssText = `left:${m.x}%;top:${m.y}%;width:${m.w}%;height:${m.h}%`;
       page.append(b);
     });
+    if (WID[i]) buildWidgets(page, i, WID[i]);
     imgs.push(img); pageEls.push(page); bookEl.append(page);
   }
   function ensureImages(center) {
@@ -331,7 +403,7 @@
     st.style.touchAction = "pan-x pan-y";
     st.addEventListener("touchstart", e => {
       if (e.touches.length === 2) { pinching = true; wasPinch = true; idx0 = (wasPinch && idx0 !== undefined && st.classList.contains("gest")) ? idx0 : pf.getCurrentPageIndex(); st.classList.add("gest"); d0 = dist(e.touches); z0 = zoom; pan = null; e.stopPropagation(); }
-      else if (e.touches.length === 1 && zoom > 1 && !e.target.closest("button,.hot,.mcard,.cp")) { pan = { x: e.touches[0].clientX, y: e.touches[0].clientY, l: st.scrollLeft, t: st.scrollTop, m: false }; e.stopPropagation(); }
+      else if (e.touches.length === 1 && zoom > 1 && !e.target.closest("button,input,.hot,.mcard,.cp,.wl")) { pan = { x: e.touches[0].clientX, y: e.touches[0].clientY, l: st.scrollLeft, t: st.scrollTop, m: false }; e.stopPropagation(); }
     }, { capture: true, passive: true });
     st.addEventListener("touchmove", e => {
       if (pinching && e.touches.length === 2) {
@@ -878,7 +950,7 @@
     if (mm.done) { const n = g.pairs.filter((p, i) => mm.pick[i] === p[1]).length; body.append(h("div", { class: "why " + (n === g.pairs.length ? "ok" : "bad") }, `⭐ ${n} / ${g.pairs.length} correct. ${n === g.pairs.length ? "Perfect match!" : "Check the red ones, then try again."}`)); }
     const btns = h("div", { style: "display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end" });
     foot.append(h("span", { class: "sc" }, mm.done ? "Bonus game" : (g.pairs.every((x, k) => mm.pick[k]) ? "Ready to check" : "Match them all to check")), btns);
-    if (!mm.done) btns.append(h("button", { class: "btn", disabled: !g.pairs.every((x, k) => mm.pick[k]), onclick: () => { mm.done = true; (g.pairs.every((p, i) => mm.pick[i] === p[1]) ? chimeWin : chimeBad)(); renderMini(); } }, "Check my answers"));
+    if (!mm.done) btns.append(h("button", { class: "btn", disabled: !g.pairs.every((x, k) => mm.pick[k]), onclick: () => { mm.done = true; const nOk = g.pairs.filter((p, i) => mm.pick[i] === p[1]).length; const dd = miniData(def.id); dd.data = dd.data || {}; dd.data.bonusBest = Math.max(dd.data.bonusBest || 0, nOk); save(); (nOk === g.pairs.length ? chimeWin : chimeBad)(); renderMini(); } }, "Check my answers"));
     else btns.append(h("button", { class: "btn alt", onclick: () => { delete st.mm; renderMini(); } }, "Play again"));
     btns.append(h("button", { class: "btn" + (mm.done ? " go" : " alt"), onclick: () => { M.bonus = false; renderMini(); } }, "‹ Back to results"), h("button", { class: "btn go", onclick: closeMini }, "Back to my page ›"));
   }

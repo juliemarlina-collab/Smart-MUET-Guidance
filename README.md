@@ -37,3 +37,6 @@ Export the pages again as WebP (or JPG, then convert), name them `p-01.webp` …
 Welcome screen with name + target band, greeting and streak, page-number box, thumbnail strip (🏁 = checkpoint, 🔒 = locked),
 zoom, auto-flip, bookmarks (☆), share link (#p=NN), search, chapter cards with scores, confetti + sounds,
 and a downloadable certificate after all 8 units. Upload everything, including the new `pages/t/` thumbnails folder.
+
+## v16 – interactive pages
+Quiz Show (pp 46–47) and quick checks (pp 8, 21, 28, 35, 42) are tappable with instant ✓/✗; tick boxes (pp 10) work; "My stars" blanks fill in automatically (incl. p50 table); p9 target lines are typeable and the target shows on p10. "Redo this page" resets a page. Upload widgets.js together with the other files.
