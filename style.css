@@ -478,3 +478,24 @@ body,#app{background:#fff!important;color:var(--ink)}
 @keyframes wdrift{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(8deg)}}
 @media(max-width:640px){.wgoal{grid-template-columns:1fr 1fr}.winside b{font-size:18px}.wb{display:none}}
 @media(prefers-reduced-motion:reduce){.wglow,.wb,#wGo{animation:none!important}}
+
+/* v19 icons */
+.uic{display:block;flex:none;width:40px;height:40px;object-fit:contain}
+.unit-main .uic{margin-right:2px}
+.mhead .em .uic{width:46px;height:46px;background:#fff;border-radius:50%}
+.gh{display:flex;align-items:center;gap:12px;margin-bottom:6px}.gh h2{margin:0}
+.gic{width:74px;height:74px;flex:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.2))}
+.gbans{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0 10px}
+.gbans img{width:100%;border-radius:12px;border:1px solid #ECEAF5;display:block}
+.wskills{display:flex;gap:8px;margin:0 0 8px}
+.wskills img{width:clamp(44px,8vw,60px);height:auto;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));animation:wdrift 6s ease-in-out infinite}
+.wskills img:nth-child(2){animation-delay:.6s}.wskills img:nth-child(3){animation-delay:1.2s}.wskills img:nth-child(4){animation-delay:1.8s}
+img.wb{width:clamp(46px,7vw,84px);height:auto;opacity:.5;font-size:0}
+@media(max-width:640px){.wskills{justify-content:center}}
+@media(prefers-reduced-motion:reduce){.wskills img{animation:none!important}}
+
+img.wb{opacity:.9;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+.wb.b1{left:3%;top:8%}.wb.b2{right:4%;top:8%}.wb.b3{left:3%;bottom:8%}.wb.b4{right:4%;bottom:8%}
+.gbans{grid-template-columns:repeat(4,1fr);gap:6px}
+body:has(#guide:not([hidden])) .toast{display:none!important}
+@media(max-width:560px){.gbans{grid-template-columns:1fr 1fr}.gic{width:56px;height:56px}}

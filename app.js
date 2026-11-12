@@ -24,6 +24,9 @@
     return e;
   };
   const mi = (name, cls) => h("img", { class: "mot " + (cls || ""), src: "assets/ic-" + name + ".webp", alt: "", width: 56, height: 56, draggable: "false" });
+  const UIC = { 1: "tip", 2: "vault", 3: "listen", 4: "speak", 5: "read", 6: "write", 7: "trophy", 8: "flag" };
+  const MIC = id => /^(clue|clue2|c34|c35)$/.test(id) ? "listen" : /^(prep|speak|p43|p45)$/.test(id) ? "speak" : /^(scan|s53|s54)$/.test(id) ? "read" : id === "peel" ? "write" : id === "self" ? "check" : "tip";
+  const ico = (n, px) => h("img", { class: "uic", src: "assets/ic-" + n + ".webp", alt: "", width: px || 40, height: px || 40, draggable: "false" });
   const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
   /* ---------------- saved progress ---------------- */
@@ -271,7 +274,7 @@
     const u = UNITS.find(x => v.includes(x.end - 1)), cp = $("#cpBtn");
     if (u) {
       cp.hidden = false; cp.classList.toggle("done", isComplete(u));
-      cp.textContent = ""; cp.append(mi(isComplete(u) ? "trophy" : "check", isComplete(u) ? "pop" : "wob"), isComplete(u) ? `Unit ${u.id} checkpoint done · Review` : `Unit ${u.id} checkpoint · optional`);
+      cp.textContent = ""; cp.append(mi(isComplete(u) ? "trophy" : "flag", isComplete(u) ? "pop" : "wob"), isComplete(u) ? `Unit ${u.id} checkpoint done · Review` : `Unit ${u.id} checkpoint · optional`);
       cp.onclick = () => openUnit(u);
     } else cp.hidden = true;
     renderToc(); markThumbs(cur);
@@ -341,8 +344,8 @@
         : locked ? h("span", { class: "toc-st lock" }, "🔒") : h("span", { class: "toc-st todo" }, "To do");
       const card = h("div", { class: "unit-card" + (isCur ? " cur" : "") + (isComplete(u) ? " done" : "") },
         h("button", { class: "unit-main", onclick: () => { closeDrawer(); goTo(u.from); } },
-          h("span", { class: "unit-num", style: "color:" + u.color }, pad(u.id)),
-          h("span", { class: "unit-t" }, h("b", {}, u.title), h("small", {}, `Pages ${u.from}–${u.end} · ${u.icon} checkpoint at p. ${u.end}`)), st),
+          h("span", { class: "unit-num", style: "color:" + u.color }, pad(u.id)), ico(UIC[u.id], 40),
+          h("span", { class: "unit-t" }, h("b", {}, u.title), h("small", {}, `Pages ${u.from}–${u.end} · checkpoint at p. ${u.end}`)), st),
         h("button", { class: "link", onclick: () => { closeDrawer(); openUnit(u); } }, isComplete(u) ? "Review checkpoint →" : "Open checkpoint →"));
       box.append(card);
     });
@@ -541,14 +544,14 @@
 
   /* ---------------- how-to-use guide ---------------- */
   const GSTEPS = () => [
-    ["📖", `Welcome${you(", ")}!`, `<p><b>Smart MUET Guide · Band Up! 2027</b> is your interactive MUET workbook: ${N} pages, ${UNITS.length} chapters, and you can tap, tick and type right on the pages.</p><p>Each chapter teaches one skill, then lets you practise it:</p><div class="chs">${UNITS.map(u => `<span><b>${u.id}.</b> ${u.title}</span>`).join("")}</div>`],
-    ["👆", "1 · Turn the pages", `<ul><li><b>Swipe</b> or drag a page corner to turn.</li><li>Tap the big <b>‹ ›</b> arrows, or type a page number in the box at the bottom.</li><li>Drag the <b>orange slider</b> to jump far, or tap any <b>small page picture</b> under the book.</li><li><b>☰ Contents</b> (top left) opens the chapter list.</li></ul>`],
-    ["🔍", "2 · Make it bigger", `<ul><li><b>Pinch</b> with two fingers to zoom in on small text. Drag with one finger to move around.</li><li>Or use the <b>− 100% +</b> buttons at the top. Set it back to 100% to turn pages again.</li><li>Tap <b>⛶</b> for full screen.</li></ul>`],
-    ["🔗", "3 · Tap the links and buttons", `<ul><li><b>Blue underlined text</b> jumps to another page.</li><li><b>Coloured pill buttons</b> (Listening, Speaking, Reading, Writing) open the practice pages.</li><li><b>🔊 / ▶ Play</b> buttons play the dialogue or audio.</li><li>Not sure what is tappable? Press <b>🔗</b> at the top to highlight everything.</li></ul>`],
-    ["✅", "4 · Answer right on the page", `<ul><li>Tap <b>A / B / C</b> (or FACT / CAP) to answer. You see <span class="tag">✓</span> or <span class="tag">✗</span> straight away, with the correct answer.</li><li>Tap the <b>☐ boxes</b> on “Where am I now?” to tick what you can do.</li><li>On page 9, <b>type</b> your required band, target band and next step.</li><li>Your <b>⭐ stars fill in by themselves</b>. Press <b>↺ Redo this page</b> to try again.</li></ul>`],
-    ["🏁", "5 · Chapter checkpoints", `<ul><li>Tap the orange <b>checkpoint</b> button at the bottom to play a short quiz for that chapter.</li><li>It is <b>optional</b> and nothing is locked. Score ${CFG.PASS_PERCENT || 60}% to complete a chapter. Retry any time.</li><li>The small card on the right opens quick games for the page you are on.</li></ul>`],
-    ["💾", "6 · Save and come back", `<ul><li>Your name, answers, stars and scores <b>save automatically on this device</b>, so use the same browser each time.</li><li><b>☆</b> bookmarks a page. <b>📤</b> copies a link to the page.</li><li>The top bar shows how many chapters you completed. Tap <b>❓</b> any time to see this guide again.</li></ul>`],
-    ["🚀", `Ready${you(", ")}?`, `<p>Your goal: <span class="tag">${state.goal || "your best band"}</span>. Take it one page at a time.</p><p>Start with <b>Chapter 1</b> to know the test, set your goal, and begin practising.</p>`]
+    ["tip", `Welcome${you(", ")}!`, `<p><b>Smart MUET Guide · Band Up! 2027</b> is your interactive MUET workbook: ${N} pages, ${UNITS.length} chapters, and you can tap, tick and type right on the pages.</p><p>Each chapter teaches one skill, then lets you practise it:</p><div class="chs">${UNITS.map(u => `<span><b>${u.id}.</b> ${u.title}</span>`).join("")}</div>`],
+    ["listen", "1 · Turn the pages", `<ul><li><b>Swipe</b> or drag a page corner to turn.</li><li>Tap the big <b>‹ ›</b> arrows, or type a page number in the box at the bottom.</li><li>Drag the <b>orange slider</b> to jump far, or tap any <b>small page picture</b> under the book.</li><li><b>☰ Contents</b> (top left) opens the chapter list.</li></ul>`],
+    ["read", "2 · Make it bigger", `<ul><li><b>Pinch</b> with two fingers to zoom in on small text. Drag with one finger to move around.</li><li>Or use the <b>− 100% +</b> buttons at the top. Set it back to 100% to turn pages again.</li><li>Tap <b>⛶</b> for full screen.</li></ul>`],
+    ["vault", "3 · Tap the links and buttons", `<ul><li><b>Blue underlined text</b> jumps to another page.</li><li><b>Coloured pill buttons</b> (Listening, Speaking, Reading, Writing) open the practice pages.</li><li><b>🔊 / ▶ Play</b> buttons play the dialogue or audio.</li><li>Not sure what is tappable? Press <b>🔗</b> at the top to highlight everything.</li></ul>`],
+    ["check", "4 · Answer right on the page", `<ul><li>Tap <b>A / B / C</b> (or FACT / CAP) to answer. You see <span class="tag">✓</span> or <span class="tag">✗</span> straight away, with the correct answer.</li><li>Tap the <b>☐ boxes</b> on “Where am I now?” to tick what you can do.</li><li>On page 9, <b>type</b> your required band, target band and next step.</li><li>Your <b>⭐ stars fill in by themselves</b>. Press <b>↺ Redo this page</b> to try again.</li></ul>`],
+    ["flag", "5 · Chapter checkpoints", `<ul><li>Tap the orange <b>checkpoint</b> button at the bottom to play a short quiz for that chapter.</li><li>It is <b>optional</b> and nothing is locked. Score ${CFG.PASS_PERCENT || 60}% to complete a chapter. Retry any time.</li><li>The small card on the right opens quick games for the page you are on.</li></ul>`],
+    ["streak", "6 · Save and come back", `<ul><li>Your name, answers, stars and scores <b>save automatically on this device</b>, so use the same browser each time.</li><li><b>☆</b> bookmarks a page. <b>📤</b> copies a link to the page.</li><li>The top bar shows how many chapters you completed. Tap <b>❓</b> any time to see this guide again.</li></ul>`],
+    ["trophy", `Ready${you(", ")}?`, `<p>Your goal: <span class="tag">${state.goal || "your best band"}</span>. Take it one page at a time.</p><p>Start with <b>Chapter 1</b> to know the test, set your goal, and begin practising.</p>`]
   ];
   let gI = 0;
   function showGuide(i) {
@@ -556,7 +559,7 @@
     $("#guide").hidden = false;
     $("#gStep").textContent = gI === 0 ? "How to use this eBook" : `Step ${gI} of ${S.length - 2}`;
     if (gI === S.length - 1) $("#gStep").textContent = "All set";
-    $("#gBody").innerHTML = `<div class="big">${s[0]}</div><h2>${s[1]}</h2>${s[2]}`; $("#gBody").scrollTop = 0;
+    $("#gBody").innerHTML = `<div class="gh"><img class="gic" src="assets/ic-${s[0]}.webp" alt=""><h2>${s[1]}</h2></div>${gI === 0 ? `<div class="gbans"><img src="assets/ban-listen.webp" alt="Listening"><img src="assets/ban-speak.webp" alt="Speaking"><img src="assets/ban-read.webp" alt="Reading"><img src="assets/ban-write.webp" alt="Writing"></div>` : ""}${s[2]}`; $("#gBody").scrollTop = 0;
     $("#gDots").innerHTML = S.map((x, k) => `<i class="${k === gI ? "on" : ""}"></i>`).join("");
     $("#gBack").style.visibility = gI ? "visible" : "hidden";
     $("#gNext").textContent = gI === S.length - 1 ? "Start reading ›" : (gI === 0 ? "Show me how ›" : "Next ›");
@@ -748,7 +751,7 @@
     const u = S.u, onResult = S.tab === STEPS.length;
     sheet.textContent = "";
     sheet.append(h("div", { class: "mhead", style: "background:" + u.color },
-      h("span", { class: "em" }, u.icon),
+      h("span", { class: "em" }, ico(UIC[u.id], 46)),
       h("div", {}, h("h2", { id: "mTitle" }, `Unit ${u.id} checkpoint`), h("small", {}, u.title)),
       h("button", { class: "x", onclick: closeModal, "aria-label": "Close" }, "✕")));
     sheet.append(h("div", { class: "steps" }, STEPS.map((s, i) =>
@@ -922,7 +925,7 @@
     MINIS.filter(m => v.includes(m.page)).forEach(m => {
       const done = state.mini[m.id] && state.mini[m.id].done;
       const b = h("button", { class: "mcard" + (done ? " done" : ""), type: "button", style: "--mc:" + m.color, onclick: () => openMini(m) },
-        h("span", { class: "mic" }, mi(done ? "trophy" : (m.type === "self" ? "check" : /^(scan|s53|s54|clue2)$/.test(m.id) ? "scan" : "puzzle"), done ? "pop" : "wig")),
+        h("span", { class: "mic" }, mi(done ? "trophy" : MIC(m.id), done ? "pop" : "wig")),
         h("span", { class: "mtx" }, h("b", {}, (done ? "Done " : "Play ") + (CARD[m.id] || m.label)), h("small", {}, done ? "Tap to review or try again" : "Tap to answer and score")));
       dock.append(b);
     });
@@ -944,7 +947,7 @@
   }
   function renderMini() {
     const def = M.def; msheet.textContent = "";
-    msheet.append(h("div", { class: "mhead", style: "background:" + def.color }, h("span", { class: "em" }, def.icon),
+    msheet.append(h("div", { class: "mhead", style: "background:" + def.color }, h("span", { class: "em" }, ico(MIC(def.id), 46)),
       h("div", {}, h("h2", {}, def.title), h("small", {}, "Try → Check → Improve → Save")),
       h("button", { class: "x", onclick: closeMini, "aria-label": "Close" }, "✕")));
     const body = h("div", { class: "mbody" }), foot = h("div", { class: "mfoot" });

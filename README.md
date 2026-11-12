@@ -46,3 +46,6 @@ Removed the grey shadow line that followed the page while zooming/scrolling. Aft
 
 ## v18
 New opening screen: blue gradient with floating icons, glowing cover, "what's inside" badges (53 pages, 8 chapters, 4 skills, 20+ games), band target cards, live "Hi <name>!" greeting, orange Open button that asks for a name first.
+
+## v19
+New icon set + skill banners (assets/ic-*.webp, assets/ban-*.webp) used on the welcome screen, how-to guide, practice cards, chapter list, checkpoint headers and checkpoint button.
