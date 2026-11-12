@@ -538,6 +538,35 @@
   $("#btnCert").onclick = certificate;
   $("#btnName").onclick = () => { closeDrawer(); showWelcome(true); };
 
+
+  /* ---------------- how-to-use guide ---------------- */
+  const GSTEPS = () => [
+    ["📖", `Welcome${you(", ")}!`, `<p><b>Smart MUET Guide · Band Up! 2027</b> is your interactive MUET workbook: ${N} pages, ${UNITS.length} chapters, and you can tap, tick and type right on the pages.</p><p>Each chapter teaches one skill, then lets you practise it:</p><div class="chs">${UNITS.map(u => `<span><b>${u.id}.</b> ${u.title}</span>`).join("")}</div>`],
+    ["👆", "1 · Turn the pages", `<ul><li><b>Swipe</b> or drag a page corner to turn.</li><li>Tap the big <b>‹ ›</b> arrows, or type a page number in the box at the bottom.</li><li>Drag the <b>orange slider</b> to jump far, or tap any <b>small page picture</b> under the book.</li><li><b>☰ Contents</b> (top left) opens the chapter list.</li></ul>`],
+    ["🔍", "2 · Make it bigger", `<ul><li><b>Pinch</b> with two fingers to zoom in on small text. Drag with one finger to move around.</li><li>Or use the <b>− 100% +</b> buttons at the top. Set it back to 100% to turn pages again.</li><li>Tap <b>⛶</b> for full screen.</li></ul>`],
+    ["🔗", "3 · Tap the links and buttons", `<ul><li><b>Blue underlined text</b> jumps to another page.</li><li><b>Coloured pill buttons</b> (Listening, Speaking, Reading, Writing) open the practice pages.</li><li><b>🔊 / ▶ Play</b> buttons play the dialogue or audio.</li><li>Not sure what is tappable? Press <b>🔗</b> at the top to highlight everything.</li></ul>`],
+    ["✅", "4 · Answer right on the page", `<ul><li>Tap <b>A / B / C</b> (or FACT / CAP) to answer. You see <span class="tag">✓</span> or <span class="tag">✗</span> straight away, with the correct answer.</li><li>Tap the <b>☐ boxes</b> on “Where am I now?” to tick what you can do.</li><li>On page 9, <b>type</b> your required band, target band and next step.</li><li>Your <b>⭐ stars fill in by themselves</b>. Press <b>↺ Redo this page</b> to try again.</li></ul>`],
+    ["🏁", "5 · Chapter checkpoints", `<ul><li>Tap the orange <b>checkpoint</b> button at the bottom to play a short quiz for that chapter.</li><li>It is <b>optional</b> and nothing is locked. Score ${CFG.PASS_PERCENT || 60}% to complete a chapter. Retry any time.</li><li>The small card on the right opens quick games for the page you are on.</li></ul>`],
+    ["💾", "6 · Save and come back", `<ul><li>Your name, answers, stars and scores <b>save automatically on this device</b>, so use the same browser each time.</li><li><b>☆</b> bookmarks a page. <b>📤</b> copies a link to the page.</li><li>The top bar shows how many chapters you completed. Tap <b>❓</b> any time to see this guide again.</li></ul>`],
+    ["🚀", `Ready${you(", ")}?`, `<p>Your goal: <span class="tag">${state.goal || "your best band"}</span>. Take it one page at a time.</p><p>Start with <b>Chapter 1</b> to know the test, set your goal, and begin practising.</p>`]
+  ];
+  let gI = 0;
+  function showGuide(i) {
+    const S = GSTEPS(); gI = Math.max(0, Math.min(S.length - 1, i)); const s = S[gI];
+    $("#guide").hidden = false;
+    $("#gStep").textContent = gI === 0 ? "How to use this eBook" : `Step ${gI} of ${S.length - 2}`;
+    if (gI === S.length - 1) $("#gStep").textContent = "All set";
+    $("#gBody").innerHTML = `<div class="big">${s[0]}</div><h2>${s[1]}</h2>${s[2]}`; $("#gBody").scrollTop = 0;
+    $("#gDots").innerHTML = S.map((x, k) => `<i class="${k === gI ? "on" : ""}"></i>`).join("");
+    $("#gBack").style.visibility = gI ? "visible" : "hidden";
+    $("#gNext").textContent = gI === S.length - 1 ? "Start reading ›" : (gI === 0 ? "Show me how ›" : "Next ›");
+  }
+  function closeGuide() { $("#guide").hidden = true; if (!state.guideSeen) { state.guideSeen = true; save(); try { goTo(1, { jump: true }); } catch (e) {} } }
+  $("#gNext").onclick = () => { if (gI >= GSTEPS().length - 1) closeGuide(); else showGuide(gI + 1); };
+  $("#gBack").onclick = () => showGuide(gI - 1);
+  $("#gX").onclick = closeGuide;
+  $("#btnGuide").onclick = () => showGuide(0);
+
   /* ---------------- welcome (personal touch) ---------------- */
   let wGoal = state.goal || "", wMode = "free"; state.free = true;
   function paintGreet() { $("#greet").textContent = nm() ? `Hi ${nm()} 👋 · Band Up! 2027` : "Band Up! 2027 · Interactive eBook"; }
@@ -550,7 +579,7 @@
   $$("#wGoal button").forEach(b => b.onclick = () => { wGoal = wGoal === b.dataset.g ? "" : b.dataset.g; $$("#wGoal button").forEach(x => x.classList.toggle("on", x.dataset.g === wGoal)); });
   function closeWelcome(save_) {
     if (save_) { state.name = $("#wName").value.trim(); state.goal = wGoal; state.free = wMode === "free"; } else state.skipped = true;
-    save(); $("#welcome").hidden = true; paintGreet(); refresh();
+    save(); $("#welcome").hidden = true; paintGreet(); refresh(); if (!state.guideSeen) setTimeout(() => showGuide(0), 500);
     if (save_ && nm()) { toast(`Hello ${nm()}! Let’s get you to ${state.goal || "your best band"} 💪`, 3600); confetti(40); }
   }
   $$("#wMode button").forEach(b => b.onclick = () => { wMode = b.dataset.m; $$("#wMode button").forEach(x => x.classList.toggle("on", x === b)); });
@@ -1124,6 +1153,7 @@
   paintGreet(); refresh(); setZoom(1); refreshMinis();
   const streak = bumpStreak();
   if (!state.name && !state.skipped) showWelcome(false);
+  else if (!state.guideSeen) showGuide(0);
   else if (!state.hinted) { const hint = $("#hint"); hint.hidden = false; setTimeout(() => { hint.hidden = true; state.hinted = true; save(); }, 6500); }
   else if (state.last > 0) toast(`Welcome back${you(", ")}! Continuing from ${pageLabel(state.last).toLowerCase()}.` + (streak > 1 ? ` 🔥 ${streak}-day streak` : ""), 3600);
   if (state.name && !state.hinted) { state.hinted = true; save(); }

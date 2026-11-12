@@ -40,3 +40,6 @@ and a downloadable certificate after all 8 units. Upload everything, including t
 
 ## v16 – interactive pages
 Quiz Show (pp 46–47) and quick checks (pp 8, 21, 28, 35, 42) are tappable with instant ✓/✗; tick boxes (pp 10) work; "My stars" blanks fill in automatically (incl. p50 table); p9 target lines are typeable and the target shows on p10. "Redo this page" resets a page. Upload widgets.js together with the other files.
+
+## v17
+Removed the grey shadow line that followed the page while zooming/scrolling. After the welcome screen (name + target band) a 7-step "How to use this eBook" guide opens, then the book goes to page 1. The ❓ button in the top bar reopens it any time.

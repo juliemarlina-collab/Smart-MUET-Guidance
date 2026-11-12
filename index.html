@@ -21,6 +21,7 @@
     </div>
     <div class="prog" title="Units completed"><span id="progTxt">0 / 8 units</span><i><b id="progBar"></b></i></div>
     <div class="tools">
+      <button id="btnGuide" class="ico" aria-label="How to use this book" title="How to use this book">❓</button>
       <button id="btnSearch" class="ico" aria-label="Search" title="Search the guide">🔍</button>
       <div class="zoom" title="Zoom"><button id="zOut" aria-label="Zoom out">−</button><span id="zLbl">100%</span><button id="zIn" aria-label="Zoom in">+</button></div>
       <button id="btnPlay" class="ico" aria-label="Auto-flip" title="Auto-flip pages">▶</button>
@@ -38,7 +39,8 @@
     <button class="nav next" id="btnNext" aria-label="Next page">›</button>
     <button id="cpBtn" class="cp" hidden></button>
     <div id="miniDock" class="mdock"></div>
-    <div id="hint" class="hint" hidden>👆 Swipe or drag a page corner to turn · tap blue links to open them</div>
+    <div id="guide" class="guide" hidden role="dialog" aria-modal="true" aria-label="How to use this eBook"><div class="gcard"><div class="gtop"><span id="gStep"></span><button id="gX" class="gx" aria-label="Close">✕</button></div><div id="gBody" class="gbody"></div><div class="gdots" id="gDots"></div><div class="gnav"><button id="gBack" class="btn alt">‹ Back</button><button id="gNext" class="btn go">Next ›</button></div></div></div>
+  <div id="hint" class="hint" hidden>👆 Swipe or drag a page corner to turn · tap blue links to open them</div>
     <button id="btnExit" class="exit" hidden aria-label="Exit full screen">✕</button>
   </main>
 
