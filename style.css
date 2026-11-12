@@ -444,3 +444,37 @@ body,#app{background:#fff!important;color:var(--ink)}
 .gnav{display:flex;justify-content:space-between;gap:10px;padding:10px 16px 16px}
 .gnav .btn{min-width:110px;min-height:46px;font-size:16px}
 @media(max-width:560px){.gbody{font-size:15px;padding:14px 16px}.gbody h2{font-size:20px}.gbody .chs{grid-template-columns:1fr}}
+
+/* v18 welcome upgrade */
+.welcome,#welcome{background:radial-gradient(ellipse at 25% 15%,#4f5bff,#2a2fa8 45%,#10123a 100%)!important}
+#welcome .wcard,#welcome .wcard *{color:#fff}
+#welcome .wcard small{color:#FFD34D!important}
+#welcome .wcard h1{color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.3)}
+#welcome .wform p{opacity:.92}
+#welcome .wform input{color:#17151E;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.25);border:3px solid transparent}
+#welcome .wform input:focus{outline:0;border-color:#FF751F}
+#welcome .wform label{color:#fff}
+#welcome .wcard .link{color:#cfd3ff}
+.wcover{position:relative}
+.wglow{position:absolute;inset:-12%;border-radius:50%;background:radial-gradient(circle,rgba(255,211,77,.45),transparent 65%);filter:blur(18px);animation:wpulse 3.5s ease-in-out infinite;pointer-events:none}
+@keyframes wpulse{0%,100%{opacity:.55;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
+.wcover img{position:relative}
+.winside{display:flex;gap:8px;margin:0 0 6px;flex-wrap:wrap}
+.winside span{flex:1;min-width:68px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:8px 6px;text-align:center;font-size:12px;font-weight:600;line-height:1.2}
+.winside b{display:block;font-size:22px;font-weight:900;color:#FFD34D!important}
+.wgoal{display:grid!important;grid-template-columns:repeat(4,1fr);gap:8px}
+#welcome .wgoal button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:16px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.3);min-height:60px;cursor:pointer}
+#welcome .wgoal button b{font-size:16px;font-weight:800}
+#welcome .wgoal button em{font-style:normal;font-size:11px;opacity:.85;font-weight:600}
+#welcome .wgoal button.on{background:#FF751F;border-color:#fff;transform:scale(1.04);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+#welcome .wgoal button.on *{color:#fff}
+#wGo{background:#FF751F!important;box-shadow:0 10px 26px rgba(0,0,0,.35);font-weight:800;min-height:54px}
+#wGo.wait{background:#7d82c9!important;box-shadow:none;animation:none}
+#wGo:not(.wait){animation:wgopulse 1.8s infinite}
+@keyframes wgopulse{0%,100%{box-shadow:0 10px 26px rgba(0,0,0,.35),0 0 0 0 rgba(255,117,31,.6)}50%{box-shadow:0 10px 26px rgba(0,0,0,.35),0 0 0 12px rgba(255,117,31,0)}}
+.wnote{text-align:center;font-size:12px;opacity:.8;margin-top:8px}
+.wb{position:absolute;font-style:normal;font-size:clamp(22px,4vw,40px);opacity:.35;animation:wdrift 7s ease-in-out infinite;pointer-events:none}
+.wb.b1{left:6%;top:12%}.wb.b2{right:8%;top:10%;animation-delay:1s}.wb.b3{left:4%;bottom:14%;animation-delay:2s}.wb.b4{right:5%;bottom:12%;animation-delay:3s}.wb.b5{left:46%;top:5%;animation-delay:1.5s}.wb.b6{right:30%;bottom:4%;animation-delay:2.5s}
+@keyframes wdrift{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(8deg)}}
+@media(max-width:640px){.wgoal{grid-template-columns:1fr 1fr}.winside b{font-size:18px}.wb{display:none}}
+@media(prefers-reduced-motion:reduce){.wglow,.wb,#wGo{animation:none!important}}

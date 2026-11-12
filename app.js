@@ -574,7 +574,7 @@
     $("#welcome").hidden = false; $("#wName").value = nm(); wGoal = state.goal || "";
     $$("#wGoal button").forEach(b => b.classList.toggle("on", b.dataset.g === wGoal));
     wMode = "free"; $$("#wMode button").forEach(b => b.classList.toggle("on", b.dataset.m === wMode));
-    $("#wGo").textContent = edit ? "Save ›" : "Open the book ›"; setTimeout(() => $("#wName").focus(), 300);
+    $("#wGo").textContent = edit ? "Save ›" : "Open the book ›"; wLive(); setTimeout(() => $("#wName").focus(), 300);
   }
   $$("#wGoal button").forEach(b => b.onclick = () => { wGoal = wGoal === b.dataset.g ? "" : b.dataset.g; $$("#wGoal button").forEach(x => x.classList.toggle("on", x.dataset.g === wGoal)); });
   function closeWelcome(save_) {
@@ -583,7 +583,15 @@
     if (save_ && nm()) { toast(`Hello ${nm()}! Let’s get you to ${state.goal || "your best band"} 💪`, 3600); confetti(40); }
   }
   $$("#wMode button").forEach(b => b.onclick = () => { wMode = b.dataset.m; $$("#wMode button").forEach(x => x.classList.toggle("on", x === b)); });
-  $("#wGo").onclick = () => closeWelcome(true);
+  const wLive = () => {
+    const n = $("#wName").value.trim(), g = wGoal;
+    $("#wHi").textContent = n ? `Hi ${n}! 👋` : "Ready to Band Up?";
+    $("#wGo").classList.toggle("wait", !n);
+    $("#wNote").textContent = !n ? "Type your name to start" : (g ? `Great, ${n}. Let's aim for ${g}!` : `Now pick your target band, ${n}.`);
+  };
+  $("#wName").addEventListener("input", wLive);
+  $$("#wGoal button").forEach(b => b.addEventListener("click", wLive));
+  $("#wGo").onclick = () => { if (!$("#wName").value.trim() && !$("#welcome").dataset.edit) { $("#wName").focus(); $("#wNote").textContent = "Please type your first name 😊"; return; } closeWelcome(true); };
   $("#wSkip").onclick = () => closeWelcome(false);
   $("#wName").addEventListener("keydown", e => { if (e.key === "Enter") closeWelcome(true); });
 

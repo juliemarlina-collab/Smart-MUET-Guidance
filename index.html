@@ -85,19 +85,22 @@
     <div class="sheet srch"><div class="sbar"><span>🔍</span><input id="sInput" type="search" placeholder="Search: PREP, band, exam slip, listening…" autocomplete="off"><button class="x" id="sClose" aria-label="Close">✕</button></div><div id="sRes" class="sres"></div></div>
   </div>
   <div id="welcome" class="welcome" hidden>
+    <i class="wb b1">⭐</i><i class="wb b2">💬</i><i class="wb b3">🎧</i><i class="wb b4">✏️</i><i class="wb b5">📖</i><i class="wb b6">🎤</i>
     <div class="wcard">
-      <div class="wcover"><img id="wImg" alt="Smart MUET Guide cover" src="pages/p-01.webp"></div>
+      <div class="wcover"><span class="wglow"></span><img id="wImg" alt="Smart MUET Guide cover" src="pages/p-01.webp"></div>
       <div class="wform">
         <img class="wlogo" src="assets/logo-wide.webp" alt="Smart MUET Guide" width="300" height="126">
-        <small>SELAMAT DATANG 👋</small>
-        <h1>Ready to Band Up?</h1>
-        <p>This is your own interactive MUET guide. Flip the pages, tap the blue links, and clear a short checkpoint after each unit. I’ll cheer you on.</p>
+        <small>SELAMAT DATANG · WELCOME 👋</small>
+        <h1 id="wHi">Ready to Band Up?</h1>
+        <p>Your own interactive MUET guide. Flip the pages, tap and answer on the page, and play a short checkpoint after each chapter.</p>
+        <div class="winside"><span><b>53</b>pages</span><span><b>8</b>chapters</span><span><b>4</b>skills</span><span><b>20+</b>games &amp; checks</span></div>
         <label for="wName">What should I call you?</label>
         <input id="wName" type="text" maxlength="24" placeholder="Your first name" autocomplete="given-name">
         <div id="wMode" hidden></div>
         <label>Your MUET target</label>
-        <div class="chips" id="wGoal"><button data-g="Band 3">Band 3</button><button data-g="Band 4">Band 4</button><button data-g="Band 5">Band 5</button><button data-g="Band 5+" >Band 5+</button></div>
+        <div class="chips wgoal" id="wGoal"><button data-g="Band 3"><b>Band 3</b><em>Get started</em></button><button data-g="Band 4"><b>Band 4</b><em>Pass confidently</em></button><button data-g="Band 5"><b>Band 5</b><em>Aim high</em></button><button data-g="Band 5+"><b>Band 5+</b><em>Top score</em></button></div>
         <button class="btn go" id="wGo">Open the book ›</button>
+        <div class="wnote" id="wNote">Takes 1 minute to set up</div>
         <button class="link" id="wSkip">Skip for now</button>
       </div>
     </div>
